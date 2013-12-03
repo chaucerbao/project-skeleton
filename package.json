@@ -1,0 +1,20 @@
+{
+  "name": "project-skeleton",
+  "version": "0.0.0",
+  "description": "A set of configuration files to help start up a web project",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "",
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-compress": "*",
+    "grunt-contrib-sass": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-uglify": "*"
+  }
+}
