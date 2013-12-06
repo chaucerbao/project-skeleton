@@ -13,18 +13,26 @@ module.exports = function(grunt) {
       js: {
         src: 'js',
         dest: 'dist/js'
+      },
+      img: {
+        src: 'img',
+        dest: 'dist/img'
       }
     },
 
     /* Global */
     watch: {
       sass: {
-        files: ['<%= project.sass.src %>/**/*.scss'],
+        files: ['<%= project.sass.src %>/**/*.{sass,scss}'],
         tasks: ['sass']
       },
       js: {
         files: ['<%= project.js.src %>/**/*.js'],
         tasks: ['jshint', 'uglify:dev']
+      },
+      img: {
+        files: ['<%= project.img.src %>/**/*.{png,jpg,gif}'],
+        tasks: ['imagemin']
       }
     },
     compress: {
@@ -55,7 +63,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: '<%= project.sass.src %>',
-          src: ['**/*.scss', '!**/_*.scss'],
+          src: ['**/*.{sass,scss}', '!**/_*.{sass,scss}'],
           dest: '<%= project.sass.dest %>',
           ext: '.css'
         }]
@@ -103,6 +111,21 @@ module.exports = function(grunt) {
           dest: '<%= project.js.dest %>'
         }]
       }
+    },
+
+    /* Images */
+    imagemin: {
+      dist: {
+        options: {
+          optimizationLevel: 3
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= project.img.src %>',
+          src: ['**/*.{png,jpg,gif}'],
+          dest: '<%= project.img.dest %>'
+        }]
+      }
     }
   });
 
@@ -112,7 +135,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-imagemin');
 
   grunt.registerTask('default', ['watch']);
-  grunt.registerTask('dist', ['sass', 'cssmin', 'jshint', 'uglify:dist', 'compress']);
+  grunt.registerTask('dist', ['sass', 'cssmin', 'jshint', 'uglify:dist', 'imagemin', 'compress']);
 };
