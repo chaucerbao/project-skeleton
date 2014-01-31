@@ -16,6 +16,12 @@
     "grunt-contrib-cssmin": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
-    "grunt-contrib-imagemin": "*"
+    "grunt-contrib-imagemin": "*",
+
+    "gulp": "*",
+    "gulp-gzip": "*",
+    "gulp-ruby-sass": "*",
+    "gulp-uglify": "*",
+    "gulp-imagemin": "*"
   }
 }
