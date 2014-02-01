@@ -20,7 +20,8 @@
 
     "gulp": "*",
     "gulp-gzip": "*",
-    "gulp-ruby-sass": "*",
+    "gulp-sass": "*",
+    "gulp-minify-css": "*",
     "gulp-uglify": "*",
     "gulp-imagemin": "*"
   }

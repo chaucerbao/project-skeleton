@@ -2,10 +2,9 @@
 
 /* Variables */
 var project = {
-  sass: {
+  css: {
     src: ['sass/**/*.{sass,scss}', '!sass/**/_*.{sass,scss}'],
-    dest: 'dist/css',
-    required: ['bourbon', 'neat']
+    dest: 'dist/css'
   },
   js: {
     src: 'js/**/*.js',
@@ -20,45 +19,44 @@ var project = {
 /* Dependencies */
 var gulp = require('gulp'),
   gzip = require('gulp-gzip'),
-  sass = require('gulp-ruby-sass'),
+  sass = require('gulp-sass'),
+  minifyCSS = require('gulp-minify-css'),
   uglify = require('gulp-uglify'),
   imagemin = require('gulp-imagemin');
 
 /* Tasks */
-gulp.task('watch', ['sass', 'uglify'], function() {
-  gulp.watch(project.sass.src[0], ['sass']);
-  gulp.watch(project.js.src, ['uglify']);
+gulp.task('watch', ['css', 'js'], function() {
+  gulp.watch(project.css.src[0], ['css']);
+  gulp.watch(project.js.src, ['js']);
 });
 
-gulp.task('gzip', function() {
-  gulp.src(project.sass.dest + '/**/*.css')
+gulp.task('compress', function() {
+  gulp.src(project.css.dest + '/**/*.css')
     .pipe(gzip())
-    .pipe(gulp.dest(project.sass.dest));
+    .pipe(gulp.dest(project.css.dest));
   gulp.src(project.js.dest + '/**/*.js')
     .pipe(gzip())
     .pipe(gulp.dest(project.js.dest));
 });
 
-gulp.task('sass', function() {
-  gulp.src(project.sass.src)
-    .pipe(sass({
-      require: project.sass.required,
-      style: 'compressed'
-    }))
-    .pipe(gulp.dest(project.sass.dest));
+gulp.task('css', function() {
+  gulp.src(project.css.src)
+    .pipe(sass())
+    .pipe(minifyCSS())
+    .pipe(gulp.dest(project.css.dest));
 });
 
-gulp.task('uglify', function() {
+gulp.task('js', function() {
   gulp.src(project.js.src)
     .pipe(uglify())
     .pipe(gulp.dest(project.js.dest));
 });
 
-gulp.task('imagemin', function() {
+gulp.task('img', function() {
   gulp.src(project.img.src)
     .pipe(imagemin())
     .pipe(gulp.dest(project.img.dest));
 });
 
-gulp.task('dist', ['sass', 'uglify', 'imagemin', 'gzip']);
+gulp.task('dist', ['css', 'js', 'img', 'compress']);
 gulp.task('default', ['watch']);
