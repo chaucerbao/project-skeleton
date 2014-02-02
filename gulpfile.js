@@ -20,6 +20,7 @@ var project = {
 var gulp = require('gulp'),
   gzip = require('gulp-gzip'),
   sass = require('gulp-sass'),
+  autoprefixer = require('gulp-autoprefixer'),
   minifyCSS = require('gulp-minify-css'),
   uglify = require('gulp-uglify'),
   imagemin = require('gulp-imagemin');
@@ -42,6 +43,7 @@ gulp.task('compress', function() {
 gulp.task('css', function() {
   gulp.src(project.css.src)
     .pipe(sass())
+    .pipe(autoprefixer())
     .pipe(minifyCSS())
     .pipe(gulp.dest(project.css.dest));
 });

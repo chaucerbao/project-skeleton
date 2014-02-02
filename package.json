@@ -21,6 +21,7 @@
     "gulp": "*",
     "gulp-gzip": "*",
     "gulp-sass": "*",
+    "gulp-autoprefixer": "*",
     "gulp-minify-css": "*",
     "gulp-uglify": "*",
     "gulp-imagemin": "*"
