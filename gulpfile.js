@@ -7,8 +7,9 @@ var project = {
     dest: 'dist/css'
   },
   js: {
-    src: 'js/**/*.js',
-    dest: 'dist/js'
+    src: ['js/vendor/**/*.js', 'js/**/*.js'],
+    dest: 'dist/js',
+    filename: 'script.js'
   },
   img: {
     src: 'img/**/*.{png,jpg,gif}',
@@ -22,6 +23,7 @@ var gulp = require('gulp'),
   sass = require('gulp-sass'),
   autoprefixer = require('gulp-autoprefixer'),
   minifyCSS = require('gulp-minify-css'),
+  concat = require('gulp-concat'),
   uglify = require('gulp-uglify'),
   imagemin = require('gulp-imagemin');
 
@@ -50,6 +52,7 @@ gulp.task('css', function() {
 
 gulp.task('js', function() {
   gulp.src(project.js.src)
+    .pipe(concat(project.js.filename))
     .pipe(uglify())
     .pipe(gulp.dest(project.js.dest));
 });

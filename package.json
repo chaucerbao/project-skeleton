@@ -23,6 +23,7 @@
     "gulp-sass": "*",
     "gulp-autoprefixer": "*",
     "gulp-minify-css": "*",
+    "gulp-concat": "*",
     "gulp-uglify": "*",
     "gulp-imagemin": "*"
   }
