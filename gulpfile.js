@@ -3,17 +3,26 @@
 /* Variables */
 var project = {
   css: {
-    src: ['sass/**/*.{sass,scss}', '!sass/**/_*.{sass,scss}'],
-    dest: 'dist/css'
+    src: {
+      base: './css/',
+      files: ['./css/**/*.{sass,scss}', '!./css/**/_*.{sass,scss}']
+    },
+    dest: './public/css/'
   },
   js: {
-    src: ['js/vendor/**/*.js', 'js/**/*.js'],
-    dest: 'dist/js',
+    src: {
+      base: './js/',
+      files: ['./js/vendor/**/*.js', './js/**/*.js']
+    },
+    dest: './public/js/',
     filename: 'script.js'
   },
   img: {
-    src: 'img/**/*.{png,jpg,gif}',
-    dest: 'dist/img'
+    src: {
+      base: './img/',
+      files: ['./img/**/*.{png,jpg,gif}']
+    },
+    dest: './public/img/'
   }
 };
 
@@ -29,8 +38,8 @@ var gulp = require('gulp'),
 
 /* Tasks */
 gulp.task('watch', ['css', 'js'], function() {
-  gulp.watch(project.css.src[0], ['css']);
-  gulp.watch(project.js.src, ['js']);
+  gulp.watch(project.css.src.files[0], ['css']);
+  gulp.watch(project.js.src.files, ['js']);
 });
 
 gulp.task('compress', function() {
@@ -43,7 +52,7 @@ gulp.task('compress', function() {
 });
 
 gulp.task('css', function() {
-  gulp.src(project.css.src)
+  gulp.src(project.css.src.files, { base: project.css.src.base })
     .pipe(sass())
     .pipe(autoprefixer())
     .pipe(minifyCSS())
@@ -51,14 +60,14 @@ gulp.task('css', function() {
 });
 
 gulp.task('js', function() {
-  gulp.src(project.js.src)
+  gulp.src(project.js.src.files, { base: project.js.src.base })
     .pipe(concat(project.js.filename))
     .pipe(uglify())
     .pipe(gulp.dest(project.js.dest));
 });
 
 gulp.task('img', function() {
-  gulp.src(project.img.src)
+  gulp.src(project.img.src.files, { base: project.img.src.base })
     .pipe(imagemin())
     .pipe(gulp.dest(project.img.dest));
 });
