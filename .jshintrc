@@ -34,7 +34,6 @@
   "es5": false,
   "esnext": false,
   "moz": false,
-
   "evil": false,
   "expr": false,
   "funcscope": false,
@@ -60,7 +59,7 @@
   "dojo": false,
   "jquery": false,
   "mootools": false,
-  "node": true,
+  "node": false,
   "nonstandard": false,
   "prototypejs": false,
   "rhino": false,
