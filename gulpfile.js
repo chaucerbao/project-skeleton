@@ -29,6 +29,7 @@ var project = {
 /* Dependencies */
 var gulp = require('gulp'),
   gzip = require('gulp-gzip'),
+  clean = require('gulp-clean'),
   sass = require('gulp-sass'),
   autoprefixer = require('gulp-autoprefixer'),
   minifyCSS = require('gulp-minify-css'),
@@ -49,6 +50,11 @@ gulp.task('compress', function() {
   gulp.src(project.js.dest + '/**/*.js')
     .pipe(gzip())
     .pipe(gulp.dest(project.js.dest));
+});
+
+gulp.task('clean', function() {
+  gulp.src([project.css.dest + '/**/*.gz', project.js.dest + '/**/*.gz'])
+    .pipe(clean());
 });
 
 gulp.task('css', function() {

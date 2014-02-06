@@ -20,6 +20,7 @@
 
     "gulp": "*",
     "gulp-gzip": "*",
+    "gulp-clean": "*",
     "gulp-sass": "*",
     "gulp-autoprefixer": "*",
     "gulp-minify-css": "*",
