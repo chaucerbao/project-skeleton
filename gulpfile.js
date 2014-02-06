@@ -72,5 +72,6 @@ gulp.task('img', function() {
     .pipe(gulp.dest(project.img.dest));
 });
 
-gulp.task('dist', ['css', 'js', 'img', 'compress']);
+gulp.task('build', ['css', 'js', 'img']);
+gulp.task('dist', ['build', 'compress']);
 gulp.task('default', ['watch']);
