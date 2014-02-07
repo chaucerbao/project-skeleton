@@ -1,6 +1,6 @@
-.sass-cache/
-.vagrant/
-node_modules/
+/.sass-cache/
+/.vagrant/
+/node_modules/
 
 .DS_Store
 Thumbs.db
