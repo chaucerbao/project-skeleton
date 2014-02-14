@@ -28,6 +28,7 @@ var project = {
 
 /* Dependencies */
 var gulp = require('gulp'),
+  newer = require('gulp-newer'),
   gzip = require('gulp-gzip'),
   clean = require('gulp-clean'),
   sass = require('gulp-sass'),
@@ -38,9 +39,10 @@ var gulp = require('gulp'),
   imagemin = require('gulp-imagemin');
 
 /* Tasks */
-gulp.task('watch', ['css', 'js'], function() {
+gulp.task('watch', ['build'], function() {
   gulp.watch(project.css.src.files[0], ['css']);
   gulp.watch(project.js.src.files, ['js']);
+  gulp.watch(project.img.src.files, ['img']);
 });
 
 gulp.task('compress', function() {
@@ -74,6 +76,7 @@ gulp.task('js', function() {
 
 gulp.task('img', function() {
   gulp.src(project.img.src.files, { base: project.img.src.base })
+    .pipe(newer(project.img.dest))
     .pipe(imagemin())
     .pipe(gulp.dest(project.img.dest));
 });
