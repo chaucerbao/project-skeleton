@@ -1,4 +1,6 @@
 $script = <<SCRIPT
+DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes git
+DEBIAN_FRONTEND=noninteractive apt-get autoremove --assume-yes
 SCRIPT
 
 VAGRANTFILE_API_VERSION = "2"
