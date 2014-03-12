@@ -12,5 +12,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.hostname = nil
   config.vm.box = "chef/ubuntu-13.10"
   config.vm.network :forwarded_port, guest: 80, host: 8080, auto_correct: true
-  config.vm.provision "shell", keep_color: true, inline: $script
+  config.vm.provision :shell, keep_color: true, inline: $script
 end
