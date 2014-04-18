@@ -22,11 +22,13 @@
     "gulp-newer": "*",
     "gulp-gzip": "*",
     "gulp-clean": "*",
-    "gulp-sass": "*",
+    "gulp-less": "*",
     "gulp-autoprefixer": "*",
     "gulp-minify-css": "*",
     "gulp-concat": "*",
     "gulp-uglify": "*",
-    "gulp-imagemin": "*"
+    "gulp-imagemin": "*",
+    "gulp-jade": "*",
+    "gulp-htmlmin": "*"
   }
 }
