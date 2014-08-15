@@ -10,7 +10,7 @@ var paths = {
 
 /* Files */
 var files = {
-  css: { src: [paths.css.src + '**/*.{sass,scss,less}', '!' + paths.css.src + '**/_*.{sass,scss,less}'] },
+  css: { src: [paths.css.src + '**/*.{sass,scss,less,styl}', '!' + paths.css.src + '**/_*.{sass,scss,less,styl}'] },
   js: { src: [paths.js.src + '**/*.js'], dest: 'script.js' },
   img: { src: [paths.img.src + '**/*.{png,jpg,gif}'] },
   html: { src: [paths.html.src + '**/*.jade'] }
@@ -21,7 +21,7 @@ var gulp = require('gulp'),
   newer = require('gulp-newer'),
   gzip = require('gulp-gzip'),
   clean = require('gulp-clean'),
-  less = require('gulp-less'),
+  stylus = require('gulp-stylus'),
   autoprefixer = require('gulp-autoprefixer'),
   minifyCSS = require('gulp-minify-css'),
   concat = require('gulp-concat'),
@@ -57,9 +57,9 @@ gulp.task('clean', function() {
 
 gulp.task('css', function() {
   gulp.src(files.css.src, { base: paths.css.src })
-    .pipe(less())
+    .pipe(stylus({ 'include css': true }))
     .pipe(autoprefixer())
-    .pipe(minifyCSS())
+    .pipe(minifyCSS({ keepSpecialComments: 0 }))
     .pipe(gulp.dest(paths.css.dest));
 });
 
