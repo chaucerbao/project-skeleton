@@ -1,11 +1,15 @@
+upstream php {
+	server unix:/var/run/php5-fpm.sock;
+}
+
 server {
-	listen 80 default_server;
-	listen [::]:80 default_server ipv6only=on;
+	server_name localhost;
 
 	root /usr/share/nginx/html;
 	index index.php index.html;
 
-	server_name localhost;
+	listen 80 default_server;
+	listen [::]:80 default_server ipv6only=on;
 
 	location / {
 		try_files $uri $uri/ /index.php?$query_string;
@@ -14,7 +18,7 @@ server {
 	location ~ \.php$ {
 		try_files $uri =404;
 		fastcgi_split_path_info ^(.+\.php)(/.+)$;
-		fastcgi_pass unix:/var/run/php5-fpm.sock;
+		fastcgi_pass php;
 		fastcgi_index index.php;
 		include fastcgi_params;
 	}
