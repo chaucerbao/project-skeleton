@@ -15,6 +15,7 @@ PACKAGES="$PACKAGES php5-pgsql postgresql"
 PACKAGES="$PACKAGES redis-server"
 
 # Install packages
+apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes $PACKAGES
 
 # Attach the project directory to the server root
