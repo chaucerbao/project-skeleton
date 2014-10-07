@@ -1,6 +1,8 @@
 #!/bin/sh
 
 # Variables
+WEBROOT=/vagrant/
+
 DBNAME=site
 DBUSER=admin
 DBPASS=password
@@ -17,7 +19,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes $PACKAGES
 
 # Attach the project directory to the server root
 rm -rf /usr/share/nginx/html/
-ln -s /vagrant/ /usr/share/nginx/html
+ln -s $WEBROOT /usr/share/nginx/html
 
 # Nginx configuration
 sed -i 's/sendfile on/sendfile off/' /etc/nginx/nginx.conf
