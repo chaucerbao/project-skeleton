@@ -1,5 +1,5 @@
 # Caching
-fastcgi_cache_path /var/cache/nginx levels=1:2 keys_zone=micro:10M;
+fastcgi_cache_path /var/cache/nginx levels=1:2 keys_zone=microcache:8M max_size=96M;
 fastcgi_cache_key "$scheme$request_method$host$request_uri";
 
 # Upstream
@@ -37,7 +37,7 @@ server {
 			add_header Set-Cookie "_bypass_cache=1;Path=/;Max-Age=5";
 		}
 
-		# fastcgi_cache micro;
+		# fastcgi_cache microcache;
 		fastcgi_cache off;
 		fastcgi_cache_valid 200 301 302 5s;
 		fastcgi_cache_bypass $bypass_cache;
