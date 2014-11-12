@@ -23,7 +23,7 @@ rm -rf /usr/share/nginx/html/
 ln -s $WEBROOT /usr/share/nginx/html
 
 # Nginx configuration
-sed -i "s/\(sendfile\) on/\\1 off/" /etc/nginx/nginx.conf
+sed -i "s/\(sendfile\) on/\1 off/" /etc/nginx/nginx.conf
 sed -i "s/\(worker_processes\) [0-9]*/\1 $(grep processor /proc/cpuinfo | wc -l)/" /etc/nginx/nginx.conf
 sed -i "s/\(worker_connections\) [0-9]*/\1 $(ulimit -n)/" /etc/nginx/nginx.conf
 sed -i "s/\(keepalive_timeout\) [0-9]*/\1 15/" /etc/nginx/nginx.conf
