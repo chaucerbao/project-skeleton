@@ -1,7 +1,6 @@
 # Caching
 fastcgi_cache_path /var/cache/nginx levels=1:2 keys_zone=micro:10M;
 fastcgi_cache_key "$scheme$request_method$host$request_uri";
-add_header X-Cache $upstream_cache_status;
 
 # Upstream
 upstream php {
@@ -35,7 +34,7 @@ server {
 		if ($request_uri ~* "/(admin/|login.php)") { set $bypass_cache 1; }
 		if ($request_method !~ ^(GET|HEAD)$) {
 			set $bypass_cache 1;
-			add_header Set-Cookie "_bypass_cache=1;Path=/;Max-Age=2";
+			add_header Set-Cookie "_bypass_cache=1;Path=/;Max-Age=5";
 		}
 
 		# fastcgi_cache micro;
@@ -43,6 +42,7 @@ server {
 		fastcgi_cache_valid 200 301 302 5s;
 		fastcgi_cache_bypass $bypass_cache;
 		fastcgi_no_cache $bypass_cache;
+		add_header X-Cache $upstream_cache_status;
 	}
 
 	location ~ /\.ht { deny all; }
