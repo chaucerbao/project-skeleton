@@ -18,11 +18,6 @@ server {
 	listen 80 default_server;
 	listen [::]:80 default_server ipv6only=on;
 
-	# Caching rules
-	set $bypass_cache 0;
-	if ($request_method != GET) { set $bypass_cache 1; }
-	if ($request_uri ~* "/(admin/|login.php)") { set $bypass_cache 1; }
-
 	location / {
 		try_files $uri $uri/ /index.php?$query_string;
 	}
@@ -33,6 +28,15 @@ server {
 		fastcgi_pass php;
 		fastcgi_index index.php;
 		include fastcgi_params;
+
+		# Caching rules
+		set $bypass_cache 0;
+		if ($http_cookie ~* "_bypass_cache") { set $bypass_cache 1; }
+		if ($request_uri ~* "/(admin/|login.php)") { set $bypass_cache 1; }
+		if ($request_method !~ ^(GET|HEAD)$) {
+			set $bypass_cache 1;
+			add_header Set-Cookie "_bypass_cache=1;Path=/;Max-Age=2";
+		}
 
 		# fastcgi_cache micro;
 		fastcgi_cache off;
