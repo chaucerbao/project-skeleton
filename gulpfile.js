@@ -4,88 +4,92 @@
 var paths = {
   css: { src: './src/css/', dest: './public/css/' },
   js: { src: './src/js/', dest: './public/js/' },
-  img: { src: './src/img/', dest: './public/img/' },
-  html: { src: './src/html/', dest: './public/' }
+  img: { src: './src/img/', dest: './public/img/' }
 };
 
 /* Files */
 var files = {
-  css: { src: [paths.css.src + '**/*.{sass,scss,less,styl}', '!' + paths.css.src + '**/_*.{sass,scss,less,styl}'] },
-  js: { src: [paths.js.src + '**/*.js'], dest: 'script.js' },
-  img: { src: [paths.img.src + '**/*.{png,jpg,gif}'] },
-  html: { src: [paths.html.src + '**/*.jade'] }
+  css: { src: paths.css.src + '**/*.styl' },
+  js: { src: paths.js.src + '**/*.js' },
+  img: { src: paths.img.src + '**/*.{png,jpg,gif}' }
 };
 
 /* Plugins */
 var gulp = require('gulp'),
+  plumber = require('gulp-plumber'),
+  notify = require('gulp-notify'),
+  del = require('del'),
+  rename = require('gulp-rename'),
   newer = require('gulp-newer'),
-  gzip = require('gulp-gzip'),
-  clean = require('gulp-clean'),
+  gzip = require('gulp-zopfli'),
+
+  /* CSS */
   stylus = require('gulp-stylus'),
-  autoprefixer = require('gulp-autoprefixer'),
+  postcss = require('gulp-postcss'),
+  postcssProcessors = [require('autoprefixer-core')],
   minifyCSS = require('gulp-minify-css'),
-  concat = require('gulp-concat'),
+
+  /* Javascript */
+  browserify = require('browserify'),
+  transform = require('vinyl-transform'),
   uglify = require('gulp-uglify'),
-  imagemin = require('gulp-imagemin'),
-  jade = require('gulp-jade'),
-  htmlmin = require('gulp-htmlmin');
+
+  /* Images */
+  imagemin = require('gulp-imagemin');
 
 /* Tasks */
 gulp.task('watch', ['build'], function() {
-  gulp.watch(files.css.src[0], ['css']);
+  gulp.watch(files.css.src, ['css']);
   gulp.watch(files.js.src, ['js']);
   gulp.watch(files.img.src, ['img']);
-  gulp.watch(files.html.src, ['html']);
 });
 
 gulp.task('compress', function() {
-  gulp.src(paths.css.dest + '/**/*.css')
+  gulp.src(paths.css.dest + '**/*.css')
     .pipe(gzip())
     .pipe(gulp.dest(paths.css.dest));
-  gulp.src(paths.js.dest + '/**/*.js')
+  gulp.src(paths.js.dest + '**/*.js')
     .pipe(gzip())
     .pipe(gulp.dest(paths.js.dest));
-  gulp.src(paths.html.dest + '/**/*.html')
-    .pipe(gzip())
-    .pipe(gulp.dest(paths.html.dest));
 });
 
 gulp.task('clean', function() {
-  gulp.src([paths.css.dest, paths.js.dest, paths.img.dest, paths.html.dest])
-    .pipe(clean());
+  del([paths.css.dest, paths.js.dest, paths.img.dest]);
 });
 
 gulp.task('css', function() {
-  gulp.src(files.css.src, { base: paths.css.src })
+  gulp.src(paths.css.src + '*.styl', { base: paths.css.src })
+    .pipe(plumber({ errorHandler: notify.onError({ title: 'CSS Error', message: '<%= error.message %>' }) }))
     .pipe(stylus({ 'include css': true }))
-    .pipe(autoprefixer())
+    .pipe(postcss(postcssProcessors))
     .pipe(minifyCSS({ keepSpecialComments: 0 }))
-    .pipe(gulp.dest(paths.css.dest));
+    .pipe(rename({ extname: '.min.css' }))
+    .pipe(gulp.dest(paths.css.dest))
+    .pipe(notify({ title: 'CSS Compiled', message: 'Success', onLast: true }));
 });
 
 gulp.task('js', function() {
-  gulp.src(files.js.src, { base: paths.js.src })
-    .pipe(newer(paths.js.dest + files.js.dest))
-    .pipe(concat(files.js.dest))
+  var browserified = transform(function(file) {
+    return browserify(file).bundle();
+  });
+
+  gulp.src(paths.js.src + '*.js', { base: paths.js.src })
+    .pipe(plumber({ errorHandler: notify.onError({ title: 'Javascript Error', message: '<%= error.message %>' }) }))
+    .pipe(browserified)
     .pipe(uglify())
-    .pipe(gulp.dest(paths.js.dest));
+    .pipe(rename({ extname: '.min.js' }))
+    .pipe(gulp.dest(paths.js.dest))
+    .pipe(notify({ title: 'Javascript Compiled', message: 'Success', onLast: true }));
 });
 
 gulp.task('img', function() {
   gulp.src(files.img.src, { base: paths.img.src })
+    .pipe(plumber({ errorHandler: notify.onError({ title: 'Images Error', message: '<%= error.message %>' }) }))
     .pipe(newer(paths.img.dest))
     .pipe(imagemin({ progressive: true, optimizationLevel: 3 }))
-    .pipe(gulp.dest(paths.img.dest));
+    .pipe(gulp.dest(paths.img.dest))
+    .pipe(notify({ title: 'Images Compiled', message: 'Success', onLast: true }));
 });
 
-gulp.task('html', function() {
-  gulp.src(files.html.src, { base: paths.html.src })
-    .pipe(newer({ dest: paths.html.dest, ext: '.html' }))
-    .pipe(jade({ pretty: true }))
-    .pipe(htmlmin({ collapseWhitespace: true }))
-    .pipe(gulp.dest(paths.html.dest));
-});
-
-gulp.task('build', ['css', 'js', 'img', 'html']);
-gulp.task('dist', ['clean', 'build', 'compress']);
+gulp.task('build', ['css', 'js', 'img']);
 gulp.task('default', ['watch']);
