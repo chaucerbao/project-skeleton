@@ -10,19 +10,23 @@
   "author": "",
   "devDependencies": {
     "autoprefixer-core": "*",
-    "browserify": "*",
+    "babel-loader": "*",
+    "css-loader": "*",
+    "csswring": "*",
     "del": "*",
     "gulp": "*",
+    "gulp-gzip": "*",
+    "gulp-iconfont": "*",
+    "gulp-iconfont-css": "*",
     "gulp-imagemin": "*",
-    "gulp-minify-css": "*",
-    "gulp-newer": "*",
-    "gulp-notify": "*",
     "gulp-plumber": "*",
     "gulp-postcss": "*",
-    "gulp-rename": "*",
-    "gulp-stylus": "*",
-    "gulp-uglify": "*",
-    "gulp-zopfli": "*",
-    "vinyl-transform": "*"
+    "gulp-sass": "*",
+    "gulp-webpack": "*",
+    "postcss-loader": "*",
+    "run-sequence": "*",
+    "sass-loader": "*",
+    "style-loader": "*",
+    "webpack": "*"
   }
 }

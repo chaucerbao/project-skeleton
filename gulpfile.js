@@ -1,95 +1,188 @@
-'use strict';
+"use strict";
 
-/* Source and destination paths */
-var paths = {
-  css: { src: './src/css/', dest: './public/css/' },
-  js: { src: './src/js/', dest: './public/js/' },
-  img: { src: './src/img/', dest: './public/img/' }
+var path = require("path"),
+  src = path.join(__dirname, "/src/"),
+  dest = path.join(__dirname, "/public/");
+
+var css = {
+  src: src + "css/",
+  dest: dest + "css/",
+  globs: ["**/*.scss", "!**/_*.scss"]
 };
 
-/* Files */
-var files = {
-  css: { src: paths.css.src + '**/*.styl' },
-  js: { src: paths.js.src + '**/*.js' },
-  img: { src: paths.img.src + '**/*.{png,jpg,gif}' }
+var js = {
+  src: src + "js/",
+  dest: dest + "js/",
+  globs: ["**/*.js", "!**/_*.js"],
+  public: "/js/"
 };
 
-/* Plugins */
-var gulp = require('gulp'),
-  plumber = require('gulp-plumber'),
-  notify = require('gulp-notify'),
-  del = require('del'),
-  rename = require('gulp-rename'),
-  newer = require('gulp-newer'),
-  gzip = require('gulp-zopfli'),
+var img = {
+  src: src + "img/",
+  dest: dest + "img/",
+  globs: ["**/*.{gif,jpg,png,svg}"]
+};
+
+var font = {
+  src: src + "icon/",
+  dest: dest + "font/",
+  globs: ["**/*.svg"],
+  name: "icon-font",
+  public: "/font/"
+};
+
+/* Attach a files() method for generating globs with an absolute path */
+[css, js, img, font].forEach(function(type) {
+  type.files = function(target) {
+    var dir = target === "dest" ? this.dest : this.src,
+      files = [];
+
+    this.globs.forEach(function(glob) {
+      files.push(dir + glob);
+    });
+
+    return files;
+  }.bind(type);
+});
+
+var gulp = require("gulp"),
+  plumber = require("gulp-plumber"),
+  runSequence = require("run-sequence"),
+  gzip = require("gulp-gzip"),
+  del = require("del"),
 
   /* CSS */
-  stylus = require('gulp-stylus'),
-  postcss = require('gulp-postcss'),
-  postcssProcessors = [require('autoprefixer-core')],
-  minifyCSS = require('gulp-minify-css'),
+  sass = require("gulp-sass"),
+  postcss = require("gulp-postcss"),
+  postcssProcessors = [
+    require("autoprefixer-core"),
+    require("csswring")
+  ],
 
   /* Javascript */
-  browserify = require('browserify'),
-  transform = require('vinyl-transform'),
-  uglify = require('gulp-uglify'),
+  gulpWebpack = require("gulp-webpack"),
+  webpack = require("webpack"),
 
-  /* Images */
-  imagemin = require('gulp-imagemin');
+  /* Image */
+  imagemin = require("gulp-imagemin"),
 
-/* Tasks */
-gulp.task('watch', ['build'], function() {
-  gulp.watch(files.css.src, ['css']);
-  gulp.watch(files.js.src, ['js']);
-  gulp.watch(files.img.src, ['img']);
-});
+  /* Icon Font */
+  iconfont = require("gulp-iconfont"),
+  iconfontCss = require("gulp-iconfont-css");
 
-gulp.task('compress', function() {
-  gulp.src(paths.css.dest + '**/*.css')
-    .pipe(gzip())
-    .pipe(gulp.dest(paths.css.dest));
-  gulp.src(paths.js.dest + '**/*.js')
-    .pipe(gzip())
-    .pipe(gulp.dest(paths.js.dest));
-});
+var webpackConfig = {
+  entry: {
+    "entry": js.src + "entry"
+  },
+  output: {
+    path: js.dest,
+    filename: "[name].js",
+    chunkFilename: "[hash].js",
+    publicPath: js.public
+  },
+  module: {
+    loaders: [{
+      test: /\.scss$/,
+      loader: "style!css!postcss!sass"
+    }, {
+      test: /\.js$/,
+      loader: "babel",
+      exclude: /node_modules/
+    }]
+  },
+  postcss: postcssProcessors,
+  plugins: [
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "common"
+    }),
+    new webpack.optimize.OccurenceOrderPlugin(true),
+    new webpack.optimize.UglifyJsPlugin()
+  ],
+  devtool: "eval"
+};
 
-gulp.task('clean', function() {
-  del([paths.css.dest, paths.js.dest, paths.img.dest]);
-});
-
-gulp.task('css', function() {
-  gulp.src(paths.css.src + '*.styl', { base: paths.css.src })
-    .pipe(plumber({ errorHandler: notify.onError({ title: 'CSS Error', message: '<%= error.message %>' }) }))
-    .pipe(stylus({ 'include css': true }))
+/* CSS */
+gulp.task("css", function() {
+  return gulp.src(css.files())
+    .pipe(plumber())
+    .pipe(sass())
     .pipe(postcss(postcssProcessors))
-    .pipe(minifyCSS({ keepSpecialComments: 0 }))
-    .pipe(rename({ extname: '.min.css' }))
-    .pipe(gulp.dest(paths.css.dest))
-    .pipe(notify({ title: 'CSS Compiled', message: 'Success', onLast: true }));
+    .pipe(gulp.dest(css.dest));
 });
 
-gulp.task('js', function() {
-  var browserified = transform(function(file) {
-    return browserify(file).bundle();
-  });
-
-  gulp.src(paths.js.src + '*.js', { base: paths.js.src })
-    .pipe(plumber({ errorHandler: notify.onError({ title: 'Javascript Error', message: '<%= error.message %>' }) }))
-    .pipe(browserified)
-    .pipe(uglify())
-    .pipe(rename({ extname: '.min.js' }))
-    .pipe(gulp.dest(paths.js.dest))
-    .pipe(notify({ title: 'Javascript Compiled', message: 'Success', onLast: true }));
+/* Javascript */
+gulp.task("js", function() {
+  return gulp.src(js.files())
+    .pipe(plumber())
+    .pipe(gulpWebpack(webpackConfig))
+    .pipe(gulp.dest(js.dest));
 });
 
-gulp.task('img', function() {
-  gulp.src(files.img.src, { base: paths.img.src })
-    .pipe(plumber({ errorHandler: notify.onError({ title: 'Images Error', message: '<%= error.message %>' }) }))
-    .pipe(newer(paths.img.dest))
-    .pipe(imagemin({ progressive: true, optimizationLevel: 3 }))
-    .pipe(gulp.dest(paths.img.dest))
-    .pipe(notify({ title: 'Images Compiled', message: 'Success', onLast: true }));
+/* Images */
+gulp.task("img", function() {
+  return gulp.src(img.files())
+    .pipe(plumber())
+    .pipe(imagemin({
+      progressive: true
+    }))
+    .pipe(gulp.dest(img.dest));
 });
 
-gulp.task('build', ['css', 'js', 'img']);
-gulp.task('default', ['watch']);
+/* Icon Font */
+gulp.task("font", function() {
+  return gulp.src(font.files(), {
+      base: path.join(path.relative(src, __dirname))
+    })
+    .pipe(plumber())
+    .pipe(iconfontCss({
+      fontName: font.name,
+      path: "scss",
+      targetPath: path.join(path.relative(font.dest, css.src), "_icons.scss"),
+      fontPath: font.public
+    }))
+    .pipe(iconfont({
+      fontName: font.name,
+      normalize: true,
+      fontHeight: 500,
+      appendCodepoints: true
+    }))
+    .pipe(gulp.dest(font.dest));
+});
+
+/* Clean destination directories */
+gulp.task("clean", function(callback) {
+  return del([
+    css.dest,
+    js.dest,
+    img.dest,
+    font.dest
+  ], callback);
+});
+
+/* Compress CSS/JS assets in destination directories */
+gulp.task("gzip", function() {
+  gulp.src(css.files("dest"))
+    .pipe(gzip())
+    .pipe(gulp.dest(css.dest));
+  gulp.src(js.files("dest"))
+    .pipe(gzip())
+    .pipe(gulp.dest(js.dest));
+});
+
+gulp.task("watch", ["build"], function() {
+  gulp.watch(css.files(), ["css"]);
+  gulp.watch(js.files(), ["js"]);
+  gulp.watch(img.files(), ["img"]);
+  gulp.watch(font.files(), ["font"]);
+});
+
+gulp.task("build", function(callback) {
+  runSequence("clean", ["css", "js", "img", "font"], callback);
+});
+
+gulp.task("dist", function(callback) {
+  runSequence("build", "gzip", callback);
+});
+
+gulp.task("default", ["build"]);
