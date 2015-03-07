@@ -108,6 +108,8 @@ var webpackConfig = {
 
 /* CSS */
 gulp.task("css", function() {
+  del.sync(css.dest);
+
   return gulp.src(css.files())
     .pipe(plumber())
     .pipe(sass())
@@ -184,7 +186,10 @@ gulp.task("gzip", function() {
 
 gulp.task("watch", ["build"], function() {
   gulp.watch(css.files(), ["css"]);
-  gulp.watch(js.files(), ["js"]);
+  gulp.watch(js.files().concat(
+    /* Also watch for CSS changes */
+    js.files("src", css.globs.slice(0, 1))
+  ), ["js"]);
   gulp.watch(img.files(), ["img"]);
   gulp.watch(font.files(), ["font"]);
 });
