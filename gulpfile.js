@@ -3,7 +3,8 @@
 /* Configuration */
 var path = require("path"),
   src = path.join(__dirname, "/src/"),
-  dest = path.join(__dirname, "/public/");
+  dest = path.join(__dirname, "/public/"),
+  production = false;
 
 var css = {
   src: src + "css/",
@@ -116,9 +117,15 @@ gulp.task("css", function() {
 
 /* Javascript */
 gulp.task("js", function() {
+  var config = webpackConfig;
+
+  if (production) {
+    delete config.devtool;
+  }
+
   return gulp.src(js.files())
     .pipe(plumber())
-    .pipe(gulpWebpack(webpackConfig))
+    .pipe(gulpWebpack(config))
     .pipe(gulp.dest(js.dest));
 });
 
@@ -185,6 +192,8 @@ gulp.task("build", function(callback) {
 });
 
 gulp.task("dist", function(callback) {
+  production = true;
+
   runSequence("build", "gzip", callback);
 });
 
