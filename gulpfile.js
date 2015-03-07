@@ -1,5 +1,6 @@
 "use strict";
 
+/* Configuration */
 var path = require("path"),
   src = path.join(__dirname, "/src/"),
   dest = path.join(__dirname, "/public/");
@@ -33,11 +34,11 @@ var font = {
 
 /* Attach a files() method for generating globs with an absolute path */
 [css, js, img, font].forEach(function(type) {
-  type.files = function(target) {
+  type.files = function(target, globs) {
     var dir = target === "dest" ? this.dest : this.src,
       files = [];
 
-    this.globs.forEach(function(glob) {
+    (globs || this.globs).forEach(function(glob) {
       files.push(dir + glob);
     });
 
@@ -45,6 +46,7 @@ var font = {
   }.bind(type);
 });
 
+/* Plugins */
 var gulp = require("gulp"),
   plumber = require("gulp-plumber"),
   runSequence = require("run-sequence"),
@@ -70,6 +72,7 @@ var gulp = require("gulp"),
   iconfont = require("gulp-iconfont"),
   iconfontCss = require("gulp-iconfont-css");
 
+/* Webpack Configuration */
 var webpackConfig = {
   entry: {
     "entry": js.src + "entry"
@@ -162,10 +165,10 @@ gulp.task("clean", function(callback) {
 
 /* Compress CSS/JS assets in destination directories */
 gulp.task("gzip", function() {
-  gulp.src(css.files("dest"))
+  gulp.src(css.files("dest", ["**/*.css"]))
     .pipe(gzip())
     .pipe(gulp.dest(css.dest));
-  gulp.src(js.files("dest"))
+  gulp.src(js.files("dest", ["**/*.js"]))
     .pipe(gzip())
     .pipe(gulp.dest(js.dest));
 });
