@@ -123,6 +123,8 @@ gulp.task("js", function() {
     delete config.devtool;
   }
 
+  del.sync(js.dest);
+
   return gulp.src(js.files())
     .pipe(plumber())
     .pipe(gulpWebpack(config))
@@ -187,9 +189,7 @@ gulp.task("watch", ["build"], function() {
   gulp.watch(font.files(), ["font"]);
 });
 
-gulp.task("build", function(callback) {
-  runSequence("clean", ["css", "js", "img", "font"], callback);
-});
+gulp.task("build", ["css", "js", "img", "font"]);
 
 gulp.task("dist", function(callback) {
   production = true;
