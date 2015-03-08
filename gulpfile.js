@@ -51,6 +51,7 @@ var font = {
 var gulp = require("gulp"),
   plumber = require("gulp-plumber"),
   runSequence = require("run-sequence"),
+  newer = require("gulp-newer"),
   gzip = require("gulp-gzip"),
   del = require("del"),
 
@@ -137,6 +138,7 @@ gulp.task("js", function() {
 gulp.task("img", function() {
   return gulp.src(img.files())
     .pipe(plumber())
+    .pipe(newer(img.dest))
     .pipe(imagemin({
       progressive: true
     }))
@@ -149,6 +151,7 @@ gulp.task("font", function() {
       base: path.join(path.relative(src, __dirname))
     })
     .pipe(plumber())
+    .pipe(newer(path.join(font.dest, font.name + ".woff")))
     .pipe(iconfontCss({
       fontName: font.name,
       path: "scss",

@@ -19,6 +19,7 @@
     "gulp-iconfont": "*",
     "gulp-iconfont-css": "*",
     "gulp-imagemin": "*",
+    "gulp-newer": "*",
     "gulp-plumber": "*",
     "gulp-postcss": "*",
     "gulp-sass": "*",
