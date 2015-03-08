@@ -23,6 +23,7 @@
     "gulp-plumber": "*",
     "gulp-postcss": "*",
     "gulp-sass": "*",
+    "gulp-server-livereload": "*",
     "gulp-webpack": "*",
     "postcss-loader": "*",
     "run-sequence": "*",

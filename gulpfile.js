@@ -54,6 +54,7 @@ var gulp = require("gulp"),
   newer = require("gulp-newer"),
   gzip = require("gulp-gzip"),
   del = require("del"),
+  server = require("gulp-server-livereload"),
 
   /* CSS */
   sass = require("gulp-sass"),
@@ -195,6 +196,13 @@ gulp.task("watch", ["build"], function() {
   ), ["js"]);
   gulp.watch(img.files(), ["img"]);
   gulp.watch(font.files(), ["font"]);
+
+  gulp.src(dest)
+    .pipe(server({
+      host: "0.0.0.0",
+      port: 8080,
+      livereload: true
+    }));
 });
 
 gulp.task("build", ["css", "js", "img", "font"]);
