@@ -7,27 +7,27 @@ var path = require("path"),
   production = false;
 
 var css = {
-  src: src + "css/",
-  dest: dest + "css/",
+  src: path.join(src, "css/"),
+  dest: path.join(dest, "css/"),
   globs: ["**/*.scss", "!**/_*.scss"]
 };
 
 var js = {
-  src: src + "js/",
-  dest: dest + "js/",
+  src: path.join(src, "js/"),
+  dest: path.join(dest, "js/"),
   globs: ["**/*.js", "!**/_*.js"],
   public: "/js/"
 };
 
 var img = {
-  src: src + "img/",
-  dest: dest + "img/",
+  src: path.join(src, "img/"),
+  dest: path.join(dest, "img/"),
   globs: ["**/*.{gif,jpg,png,svg}"]
 };
 
 var font = {
-  src: src + "icon/",
-  dest: dest + "font/",
+  src: path.join(src, "icon/"),
+  dest: path.join(dest, "font/"),
   globs: ["**/*.svg"],
   name: "icon-font",
   public: "/font/"
@@ -105,7 +105,7 @@ types.forEach(function(type) {
       files = [];
 
     (globs || this.globs).forEach(function(glob) {
-      files.push(dir + glob);
+      files.push(path.join(dir, glob));
     });
 
     return files;
