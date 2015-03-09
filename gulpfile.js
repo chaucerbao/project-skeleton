@@ -16,6 +16,9 @@ var js = {
   src: path.join(src, "js"),
   dest: path.join(dest, "js"),
   globs: ["**/*.js", "!**/_*.js"],
+  entry: {
+    "entry": "entry.js"
+  },
   public: "/js/"
 };
 
@@ -39,10 +42,10 @@ var types = [css, js, img, font];
 var gulp = require("gulp"),
   gutil = require("gulp-util"),
   plumber = require("gulp-plumber"),
-  runSequence = require("run-sequence"),
   newer = require("gulp-newer"),
   gzip = require("gulp-gzip"),
   del = require("del"),
+  runSequence = require("run-sequence"),
   sourcemaps = require("gulp-sourcemaps"),
   server = require("gulp-server-livereload"),
 
@@ -67,9 +70,7 @@ var gulp = require("gulp"),
 
 /* Webpack Configuration */
 var webpackConfig = {
-  entry: {
-    "entry": js.src + "/entry"
-  },
+  entry: js.entry,
   output: {
     path: js.dest,
     filename: "[name].js",
@@ -95,6 +96,9 @@ var webpackConfig = {
     new webpack.optimize.OccurenceOrderPlugin(true),
     new webpack.optimize.UglifyJsPlugin()
   ],
+  resolve: {
+    root: js.src
+  },
   devtool: "eval"
 };
 
