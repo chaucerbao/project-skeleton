@@ -33,27 +33,17 @@ var font = {
   public: "/font/"
 };
 
-/* Attach a files() method for generating globs with an absolute path */
-[css, js, img, font].forEach(function(type) {
-  type.files = function(target, globs) {
-    var dir = target === "dest" ? this.dest : this.src,
-      files = [];
-
-    (globs || this.globs).forEach(function(glob) {
-      files.push(dir + glob);
-    });
-
-    return files;
-  }.bind(type);
-});
+var types = [css, js, img, font];
 
 /* Plugins */
 var gulp = require("gulp"),
+  gutil = require("gulp-util"),
   plumber = require("gulp-plumber"),
   runSequence = require("run-sequence"),
   newer = require("gulp-newer"),
   gzip = require("gulp-gzip"),
   del = require("del"),
+  sourcemaps = require("gulp-sourcemaps"),
   server = require("gulp-server-livereload"),
 
   /* CSS */
@@ -108,14 +98,32 @@ var webpackConfig = {
   devtool: "eval"
 };
 
+/* Attach a files() method for generating globs with an absolute path */
+types.forEach(function(type) {
+  type.files = function(target, globs) {
+    var dir = target === "dest" ? this.dest : this.src,
+      files = [];
+
+    (globs || this.globs).forEach(function(glob) {
+      files.push(dir + glob);
+    });
+
+    return files;
+  }.bind(type);
+});
+
 /* CSS */
 gulp.task("css", function() {
+  var noop = gutil.noop;
+
   del.sync(css.dest);
 
   return gulp.src(css.files())
     .pipe(plumber())
+    .pipe(production ? noop() : sourcemaps.init())
     .pipe(sass())
     .pipe(postcss(postcssProcessors))
+    .pipe(production ? noop() : sourcemaps.write())
     .pipe(gulp.dest(css.dest));
 });
 
@@ -170,12 +178,11 @@ gulp.task("font", function() {
 
 /* Clean destination directories */
 gulp.task("clean", function(callback) {
-  return del([
-    css.dest,
-    js.dest,
-    img.dest,
-    font.dest
-  ], callback);
+  var paths = types.map(function(type) {
+    return type.dest;
+  });
+
+  return del(paths, callback);
 });
 
 /* Compress CSS/JS assets in destination directories */

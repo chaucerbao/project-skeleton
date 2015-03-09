@@ -24,6 +24,8 @@
     "gulp-postcss": "*",
     "gulp-sass": "*",
     "gulp-server-livereload": "*",
+    "gulp-sourcemaps": "*",
+    "gulp-util": "*",
     "gulp-webpack": "*",
     "postcss-loader": "*",
     "run-sequence": "*",
