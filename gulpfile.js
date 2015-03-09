@@ -2,32 +2,32 @@
 
 /* Configuration */
 var path = require("path"),
-  src = path.join(__dirname, "/src/"),
-  dest = path.join(__dirname, "/public/"),
+  src = path.join(__dirname, "src"),
+  dest = path.join(__dirname, "public"),
   production = false;
 
 var css = {
-  src: path.join(src, "css/"),
-  dest: path.join(dest, "css/"),
+  src: path.join(src, "css"),
+  dest: path.join(dest, "css"),
   globs: ["**/*.scss", "!**/_*.scss"]
 };
 
 var js = {
-  src: path.join(src, "js/"),
-  dest: path.join(dest, "js/"),
+  src: path.join(src, "js"),
+  dest: path.join(dest, "js"),
   globs: ["**/*.js", "!**/_*.js"],
   public: "/js/"
 };
 
 var img = {
-  src: path.join(src, "img/"),
-  dest: path.join(dest, "img/"),
+  src: path.join(src, "img"),
+  dest: path.join(dest, "img"),
   globs: ["**/*.{gif,jpg,png,svg}"]
 };
 
 var font = {
-  src: path.join(src, "icon/"),
-  dest: path.join(dest, "font/"),
+  src: path.join(src, "icon"),
+  dest: path.join(dest, "font"),
   globs: ["**/*.svg"],
   name: "icon-font",
   public: "/font/"
@@ -68,7 +68,7 @@ var gulp = require("gulp"),
 /* Webpack Configuration */
 var webpackConfig = {
   entry: {
-    "entry": js.src + "entry"
+    "entry": js.src + "/entry"
   },
   output: {
     path: js.dest,
