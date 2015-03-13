@@ -116,6 +116,12 @@ types.forEach(function(type) {
   }.bind(type);
 });
 
+/* Gracefully end a task upon error */
+var errorHandler = function(err) {
+  console.log(err);
+  this.emit('end');
+};
+
 /* CSS */
 gulp.task("css", function() {
   var noop = gutil.noop;
@@ -123,7 +129,7 @@ gulp.task("css", function() {
   del.sync(css.dest);
 
   return gulp.src(css.files())
-    .pipe(plumber())
+    .pipe(plumber(errorHandler))
     .pipe(production ? noop() : sourcemaps.init())
     .pipe(sass())
     .pipe(postcss(postcssProcessors))
@@ -142,7 +148,7 @@ gulp.task("js", function() {
   del.sync(js.dest);
 
   return gulp.src(js.files())
-    .pipe(plumber())
+    .pipe(plumber(errorHandler))
     .pipe(gulpWebpack(config))
     .pipe(gulp.dest(js.dest));
 });
@@ -150,7 +156,7 @@ gulp.task("js", function() {
 /* Images */
 gulp.task("img", function() {
   return gulp.src(img.files())
-    .pipe(plumber())
+    .pipe(plumber(errorHandler))
     .pipe(newer(img.dest))
     .pipe(imagemin({
       progressive: true
@@ -163,7 +169,7 @@ gulp.task("font", function() {
   return gulp.src(font.files(), {
       base: path.join(path.relative(src, __dirname))
     })
-    .pipe(plumber())
+    .pipe(plumber(errorHandler))
     .pipe(newer(path.join(font.dest, font.name + ".woff")))
     .pipe(iconfontCss({
       fontName: font.name,
