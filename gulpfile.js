@@ -117,9 +117,9 @@ types.forEach(function(type) {
 });
 
 /* Gracefully end a task upon error */
-var errorHandler = function(err) {
-  console.log(err);
-  this.emit('end');
+var errorHandler = function(error) {
+  gutil.log(error.toString());
+  this.emit("end");
 };
 
 /* CSS */
