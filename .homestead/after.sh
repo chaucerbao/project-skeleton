@@ -18,8 +18,9 @@ echo "source ~/.dotfiles/vim/.vimrc" >> ~/.vimrc
 # tmux config
 echo "source-file ~/.dotfiles/tmux/.tmux.conf" >> ~/.tmux.conf
 
-# Laravel
+# Laravel/Lumen
 composer global require "laravel/installer"
+composer global require "laravel/lumen-installer"
 composer global update
 
 # Self-destruct
