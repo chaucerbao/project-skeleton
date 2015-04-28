@@ -1,10 +1,7 @@
 #!/bin/sh
 
-# Pygments style
-curl -s -o /usr/local/lib/python2.7/dist-packages/pygments/styles/solarized256.py "https://raw.githubusercontent.com/gthank/solarized-dark-pygments/master/solarized256.py"
-
 # Node packages
-npm install -g csslint js-beautify jshint jsonlint
+npm install -g js-beautify
 
 # Init script
 cat <<EOF >> /home/vagrant/init
@@ -21,7 +18,6 @@ echo "source-file ~/.dotfiles/tmux/.tmux.conf" >> ~/.tmux.conf
 # Laravel/Lumen
 composer global require "laravel/installer"
 composer global require "laravel/lumen-installer"
-composer global update
 
 # Self-destruct
 rm /home/vagrant/init

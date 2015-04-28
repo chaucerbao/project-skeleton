@@ -1,7 +1,7 @@
 alias ..="cd .."
 alias ...="cd ../.."
 
-alias c='pygmentize -g -f 256 -O style=solarized256'
+alias c='pygmentize -g'
 alias l='ls -l'
 alias ll='ls -lA'
 alias ls='ls --color=auto -hF'
