@@ -1,7 +1,7 @@
 {
   "preset": "google",
-  "disallowMultipleVarDecl": null,
 
+  "esnext": true,
   "requireBlocksOnNewline": true,
   "requireKeywordsOnNewLine": [
     "for",
@@ -11,13 +11,11 @@
     "default",
     "try",
     "do",
-    "let",
-    "var",
-    "const",
     "return"
   ],
   "requireLineBreakAfterVariableAssignment": true,
   "requireObjectKeysOnNewLine": true,
+  "requirePaddingNewLineAfterVariableDeclaration": true,
   "requirePaddingNewLinesInObjects": true,
   "requirePaddingNewlinesBeforeKeywords": [
     "for",
@@ -26,9 +24,6 @@
     "try",
     "do",
     "while",
-    "let",
-    "var",
-    "const",
     "return"
   ],
   "requireSpaceAfterComma": true,
