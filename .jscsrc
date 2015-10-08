@@ -1,5 +1,40 @@
 {
   "preset": "google",
-  "validateQuoteMarks": true,
-  "esnext": true
+  "disallowMultipleVarDecl": null,
+
+  "requireBlocksOnNewline": true,
+  "requireKeywordsOnNewLine": [
+    "for",
+    "if",
+    "switch",
+    "case",
+    "default",
+    "try",
+    "do",
+    "let",
+    "var",
+    "const",
+    "return"
+  ],
+  "requireLineBreakAfterVariableAssignment": true,
+  "requireObjectKeysOnNewLine": true,
+  "requirePaddingNewLinesInObjects": true,
+  "requirePaddingNewlinesBeforeKeywords": [
+    "for",
+    "if",
+    "switch",
+    "try",
+    "do",
+    "while",
+    "let",
+    "var",
+    "const",
+    "return"
+  ],
+  "requireSpaceAfterComma": true,
+  "requireSpaceBeforeKeywords": [
+    "else",
+    "while",
+    "catch"
+  ]
 }
