@@ -31,5 +31,9 @@
     "else",
     "while",
     "catch"
-  ]
+  ],
+  "requireSpacesInAnonymousFunctionExpression": {
+    "beforeOpeningRoundBrace": true,
+    "beforeOpeningCurlyBrace": true
+  }
 }
