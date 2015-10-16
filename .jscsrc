@@ -43,7 +43,7 @@
     "catch"
   ],
   "requireSpacesInAnonymousFunctionExpression": {
-    "beforeOpeningRoundBrace": true,
     "beforeOpeningCurlyBrace": true
-  }
+  },
+  "validateQuoteMarks": "\""
 }
