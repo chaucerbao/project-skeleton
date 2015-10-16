@@ -8,6 +8,10 @@
     "node": true
   },
 
+  "ecmaFeatures": {
+    "modules": true
+  },
+
   "rules": {
     // Possible Errors
     "no-console": 1,
@@ -82,7 +86,7 @@
       }
     }],
     "padded-blocks": [2, "never"],
-    "quotes": [2, "single"],
+    "quotes": [2, "double"],
     "semi": 2,
     "semi-spacing": 2,
     "space-after-keywords": 2,
