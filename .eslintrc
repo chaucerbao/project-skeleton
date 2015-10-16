@@ -11,7 +11,7 @@
   "rules": {
     // Possible Errors
     "no-console": 1,
-    "no-extra-parens": 2,
+    "no-extra-parens": [2, "functions"],
     "no-unexpected-multiline": 2,
 
     // Best Practices
@@ -33,7 +33,7 @@
     "no-new": 2,
     "no-new-func": 2,
     "no-param-reassign": 2,
-    "no-return-assign": [2, "always"],
+    "no-return-assign": 2,
     "no-self-compare": 2,
     "no-unused-expressions": 2,
     "no-useless-call": 2,
