@@ -16,6 +16,16 @@
   "requireLineBreakAfterVariableAssignment": true,
   "requireObjectKeysOnNewLine": true,
   "requirePaddingNewLineAfterVariableDeclaration": true,
+  "requirePaddingNewLinesAfterBlocks": {
+    "allExcept": [
+      "inCallExpressions",
+      "inNewExpressions",
+      "inArrayExpressions",
+      "inProperties"
+    ]
+  },
+  "requirePaddingNewLinesAfterUseStrict": true,
+  "requirePaddingNewLinesBeforeExport": true,
   "requirePaddingNewLinesInObjects": true,
   "requirePaddingNewlinesBeforeKeywords": [
     "for",
